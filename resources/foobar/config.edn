@@ -1,0 +1,37 @@
+{:duct.profile/base
+ {:duct.core/project-ns foobar
+
+  :duct.router/cascading
+  [#ig/ref [:foobar.handler/example]
+   #ig/ref [:foobar.handler/cqrs]]
+
+  :foobar.handler/example {}
+  :foobar.handler/cqrs {:queue #ig/ref :foobar.queue/commands
+                        ;; :data-source #ig/ref :foobar.db/data-source
+                        :data-source nil
+                        }
+
+  :foobar.queue/commands {:service #ig/ref :foobar.mock/queue}
+
+  :foobar.mock/queue {}
+  }
+ ;; :foobar.db/data-source {:service nil}
+ ;; :foobar.db/data-source {:service #ig/ref :duct.datomic/conn}
+
+ ;; :dev
+ ;; :duct.kafka/conn #ig/ref :foobar.mock/queue
+
+ ;; :foobar.datomic/conn {:db "mem:"}
+
+ ;; :foobar.tape/conn {}
+
+ ;; prod
+ ;; :duct.kafka/conn {:host "localhost"} ;; etc
+ ;; :duct.datomic/conn {:host "localhost"} ;; etc
+
+ :duct.profile/dev   #duct/include "dev"
+ :duct.profile/local #duct/include "local"
+ :duct.profile/prod  {}
+
+ :duct.module/logging {}
+ :duct.module.web/api {}}
