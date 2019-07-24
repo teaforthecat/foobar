@@ -5,7 +5,9 @@
   :dependencies [[org.clojure/clojure "1.10.0"]
                  [duct/core "0.7.0"]
                  [duct/module.logging "0.4.0"]
-                 [duct/module.web "0.7.0"]]
+                 [duct/module.web "0.7.0"]
+                 [org.apache.kafka/kafka-clients "2.3.0"]
+                 [metosin/compojure-api "2.0.0-alpha30"]]
   :plugins [[duct/lein-duct "0.12.1"]]
   :main ^:skip-aot foobar.main
   :resource-paths ["resources" "target/resources"]
@@ -20,5 +22,6 @@
    :project/dev  {:source-paths   ["dev/src"]
                   :resource-paths ["dev/resources"]
                   :dependencies   [[integrant/repl "0.3.1"]
+                                   [com.gearswithingears/shrubbery "0.4.1"]
                                    [eftest "0.5.7"]
                                    [kerodon "0.9.0"]]}})
