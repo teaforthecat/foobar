@@ -1,14 +1,14 @@
 (ns foobar.mock.queue
-  (:require [integrant.core :as ig]))
+  (:require [integrant.core :as ig]
+            [duct.queue.kafka :as k]))
 
-(defprotocol Boundary
-  (enqueue [this message]))
 
 (defrecord MockQueue []
-  ;; duct.kafka/Boundary
-  Boundary
-  (enqueue [this message]
-    {:success true}))
+  k/Boundary
+  (produce [this message]
+    {:success true})
+  (consume [this topic handler]
+    :ok))
 
 (defmethod ig/init-key :foobar.mock/queue [_ options]
   (fn [config]

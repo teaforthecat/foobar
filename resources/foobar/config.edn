@@ -6,14 +6,27 @@
    #ig/ref [:foobar.handler/cqrs]]
 
   :foobar.handler/example {}
-  :foobar.handler/cqrs {:queue #ig/ref :foobar.queue/commands
-                        ;; :data-source #ig/ref :foobar.db/data-source
-                        :data-source nil
+  :foobar.handler/cqrs {:queue #ig/ref :duct.queue/kafka
+                        :data-source #ig/ref :foobar.db/data-source
+                        :commands [:foobar.handler.cqrs/example]
                         }
 
-  :foobar.queue/commands {:service #ig/ref :foobar.mock/queue}
+  :foobar.queue/commands {:service #ig/ref :duct.queue/kafka}
+  :foobar.db/data-source {:service #ig/ref :foobar.mock/data-source}
+  ;; :foobar.db/data-source {:service #ig/ref :duct.db/datomic}
 
+  :duct.queue/kafka {"bootstrap.servers", "localhost:9092"
+                     :consumer {"group.id" "foobar"
+                                "enable.auto.commit" false
+                                "key.deserializer" "org.apache.kafka.common.serialization.StringDeserializer"
+                                "value.deserializer" "org.apache.kafka.common.serialization.StringDeserializer"}
+                     :producer {"client.id" "foobar"
+                                "enable.idempotence" true
+                                "key.serializer", "org.apache.kafka.common.serialization.StringSerializer"
+                                "value.serializer", "org.apache.kafka.common.serialization.StringSerializer"}}
+  ;; :duct.datomic/conn {:db-uri "mem:/"}
   :foobar.mock/queue {}
+  :foobar.mock/data-source {}
   }
  ;; :foobar.db/data-source {:service nil}
  ;; :foobar.db/data-source {:service #ig/ref :duct.datomic/conn}

@@ -1,7 +1,20 @@
 (ns foobar.handler.cqrs
-  (:require [compojure.core :refer :all]
+  (:require [compojure.api.sweet :refer [api context resource GET POST]]
+            [clojure.spec.alpha :as s]
             [integrant.core :as ig]
             [clojure.java.io :as io]))
+
+;; ::command gets re-mapped to what is passed as options(aka: config.edn)
+(s/def ::command keyword?)
+(s/def ::args map?)
+(s/def ::command-id uuid?)
+(s/def ::command-body (s/keys :req-un [::command ::args] :opt-un [::command-id]))
+
+(s/def ::zulu number?)
+(s/def ::example (s/keys :req-un [::zulu]))
+
+(s/def ::name string?)
+(s/def ::message string?)
 
 (defn valid-command? [body]
   (let [{:keys [command args command-id]} body]
@@ -20,23 +33,34 @@
         (handler (update req :params merge body-params)))
       (handler req))))
 
+(defn command-handler [req]
+  {:status 200 :body (:body-params req)})
+
+(defmethod ig/prep-key :foobar.handler/cqrs [_ options]
+  ;; re-assign
+  (s/def ::command #(some (set (:commands options)) #{%}))
+
+  options
+  )
+
+
 (defmethod ig/init-key :foobar.handler/cqrs [_ options]
-  (wrap-routes
+  (api
+   {:swagger
+    {:ui "/api-docs"
+     :spec "/swagger.json"
+     :data {:info {:title "Sample API"
+                   :description "Compojure Api example"}
+            :tags [{:name "api", :description "some apis"}]
+            :consumes ["application/json"]
+            :produces ["application/json"]}}}
    (context "/api" {{:keys [user-id]} :session}
-            (POST "/command" request
-                  (if (valid-command? (:params request))
-                    (let [result (.enqueue (:queue options)
-                                           (assoc (:params request) :user-id user-id))]
-                      (if (:success result)
-                        {:status 200 :body result}
-                        {:status 503 :body "could not enqueue command"}))
-                    {:status 400 :body "error message"}))
-            (GET "/query" request
-                 (if (valid-query? (:params request))
-                   (let [result (.query (:data-source options)
-                                        (assoc (:params request) :user-id user-id))]
-                     (if (:success result)
-                       {:status 200 :body result}
-                       {:status 503 :body "could not retrieve data"}))
-                   {:status 400 :body "error message"})))
-   read-body))
+            :coercion :spec
+            (context "/command" []
+                     (resource {:post
+                                {:summary " post commands to be enqueued and processed asynchronously"
+                                 :parameters {:body-params ::command-body}
+                                 :consumes ["application/json" "application/edn"]
+                                 :produces ["application/json" "application/edn"]
+                                 :handler command-handler}}))))
+  )

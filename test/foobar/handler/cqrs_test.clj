@@ -12,7 +12,7 @@
 (deftest api-requests
   (testing "invalid command results in 400"
     (let [handler (ig/init-key :foobar.handler/cqrs {:queue nil :data-source nil})
-          response (handler (mock/request :post "/api/command" {:wut true}))]
+          response (handler (mock/request :post "/api/command" (pr-str {:wut true})))]
       (is (= (:status response) 400))))
   (testing "valid command results in 200"
     (let [handler (ig/init-key :foobar.handler/cqrs {:queue mock-queue :data-source nil})
