@@ -34,7 +34,7 @@
                             (if @continue
                               (do
                                 ; this do block is where we ensure that offsets aren't
-                                ; commited until the handler handles each
+                                ; committed until the handler handles each
                                 (doseq [^ConsumerRecord record (.poll consumer poll-wait)]
                                   (handler {:topic (.topic record)
                                             :key (.key record)
@@ -80,12 +80,11 @@
     props))
 
 (defmethod ig/init-key :duct.queue/kafka [_ options]
-  (fn [conf]
-    (let [p-opts (merge (dissoc options :consumer :producer) (:producer options))
-          c-opts (merge (dissoc options :consumer :producer) (:consumer options))
-          producer (KafkaProducer. (props p-opts))
-          consumer (KafkaConsumer. (props c-opts))]
-      (map->Conn {:producer producer :consumer consumer}))))
+  (let [p-opts (merge (dissoc options :consumer :producer) (:producer options))
+        c-opts (merge (dissoc options :consumer :producer) (:consumer options))
+        producer (KafkaProducer. (props p-opts))
+        consumer (KafkaConsumer. (props c-opts))]
+    (map->Conn {:producer producer :consumer consumer})))
 
 (defmethod ig/halt-key! :duct.queue/kafka [_ conn]
   (cond-> conn
@@ -115,7 +114,7 @@
 
   (def conf {})
 
-  (def conn ((ig/init-key :duct.queue/kafka options) conf))
+  (def conn (ig/init-key :duct.queue/kafka options))
 
   (produce conn {:topic "abc" :key "12345" :value "xyz"})
 

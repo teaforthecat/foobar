@@ -31,5 +31,5 @@ services:
       # KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-      CONFLUENT_SUPPORT_METRICS_ENABLE: false
+      CONFLUENT_SUPPORT_METRICS_ENABLE: "false"
       # confluent.support.metrics.enable: false
