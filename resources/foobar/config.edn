@@ -22,7 +22,13 @@
                                 "enable.idempotence" true
                                 "key.serializer", "org.apache.kafka.common.serialization.StringSerializer"
                                 "value.serializer", "org.apache.kafka.common.serialization.StringSerializer"}}
-  ;; :duct.datomic/conn {:db-uri "mem:/"}
+
+  :foobar.bg/command-handler {:conn #ig/ref :duct.db/datomic}
+  :foobar.bg/processor {:queue #ig/ref :duct.queue/kafka
+                        :topics ["commands"]
+                        :handler #ig/ref :foobar.bg/command-handler}
+
+  :duct.db/datomic {:db-uri "datomic:mem://foobar"}
   :foobar.mock/queue {}
   :foobar.mock/data-source {}
   }

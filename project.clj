@@ -7,7 +7,11 @@
                  [duct/module.logging "0.4.0"]
                  [duct/module.web "0.7.0"]
                  [org.apache.kafka/kafka-clients "2.3.0"]
+                 [com.datomic/datomic-pro "0.9.5930"]
                  [metosin/compojure-api "2.0.0-alpha30"]]
+
+  :repositories {"my.datomic.com" {:url "https://my.datomic.com/repo"
+                                   :creds :gpg}}
   :plugins [[duct/lein-duct "0.12.1"]]
   :main ^:skip-aot foobar.main
   :resource-paths ["resources" "target/resources"]
