@@ -23,12 +23,19 @@
                                 "key.serializer", "org.apache.kafka.common.serialization.StringSerializer"
                                 "value.serializer", "org.apache.kafka.common.serialization.StringSerializer"}}
 
-  :foobar.bg/command-handler {:conn #ig/ref :duct.db/datomic}
+  :foobar.bg/command-handler {:conn #ig/ref :duct.db/datomic
+                              :pubsub #ig/ref :duct.queue/redis}
+
   :foobar.bg/processor {:queue #ig/ref :duct.queue/kafka
                         :topics ["commands"]
                         :handler #ig/ref :foobar.bg/command-handler}
 
-  :duct.db/datomic {:db-uri "datomic:mem://foobar"}
+  :duct.db/datomic {:db-uri "datomic:mem://foobar"
+                    :schema ["foobar/db/spec-schema.edn"]
+                    }
+  :duct.queue/redis {:pool {}
+                     :spec {:uri "redis://localhost:6379"}}
+
   :foobar.mock/queue {}
   :foobar.mock/data-source {}
   }

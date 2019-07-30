@@ -1,0 +1,1 @@
+[#:db{:ident :foobar.handler.cqrs/zulu, :valueType :db.type/long, :cardinality :db.cardinality/one}]

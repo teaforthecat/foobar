@@ -1,1 +1,3 @@
-{}
+{:duct.db/spectomic {:out-file "resources/foobar/db/spec-schema.edn"
+                      :spec-schema [:foobar.handler.cqrs/zulu]}
+ }

@@ -8,6 +8,7 @@
                  [duct/module.web "0.7.0"]
                  [org.apache.kafka/kafka-clients "2.3.0"]
                  [com.datomic/datomic-pro "0.9.5930"]
+                 [com.taoensso/carmine "2.19.1"]
                  [metosin/compojure-api "2.0.0-alpha30"]]
 
   :repositories {"my.datomic.com" {:url "https://my.datomic.com/repo"
@@ -27,5 +28,7 @@
                   :resource-paths ["dev/resources"]
                   :dependencies   [[integrant/repl "0.3.1"]
                                    [com.gearswithingears/shrubbery "0.4.1"]
+                                   [org.clojure/test.check "0.10.0-alpha4"]
+                                   [provisdom/spectomic "0.7.9"]
                                    [eftest "0.5.7"]
                                    [kerodon "0.9.0"]]}})

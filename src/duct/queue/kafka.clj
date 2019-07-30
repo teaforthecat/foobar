@@ -9,11 +9,9 @@
 
 (defprotocol Boundary
   (produce
-    [conn message]
-    [conn message serializer])
+    [conn message])
   (consume
-    [conn topic handler]
-    [conn topic handler deserializer]))
+    [conn topic handler]))
 
 
 (defn consume-thread

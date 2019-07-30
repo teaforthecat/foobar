@@ -24,12 +24,12 @@
                              #(s/get-spec (:command %))
                              #(s/valid? (:command %) (:args %))))
 
-(s/def ::zulu number?)
+(s/def ::zulu int?)
 (s/def ::example (s/keys :req-un [::zulu]))
 (defn example [{:keys [command args command-id session]} deps]
   (let [kcon (:queue deps)
         ;; hmm, lots to coordinate here
-        body {:command command :args args :command-id command-id :user-id session}
+        body {:command command :args args :command-id command-id :user-id (:user-id session)}
         kkey (str (or command-id (str (java.util.UUID/randomUUID))))
         msg {:topic "commands" :key kkey :value (pr-str body)}
         result (.produce kcon msg)]
