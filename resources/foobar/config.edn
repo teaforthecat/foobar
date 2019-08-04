@@ -8,7 +8,9 @@
   :foobar.handler/example {}
   :foobar.handler/cqrs {:queue #ig/ref :duct.queue/kafka
                         :data-source #ig/ref :foobar.db/data-source
+                        :pubsub #ig/ref :duct.queue/redis
                         :commands [:foobar.handler.cqrs/example]
+                        :sse :foobar.handler.cqrs/sse-handler
                         }
 
   :foobar.db/data-source {:service #ig/ref :foobar.mock/data-source}
@@ -38,6 +40,9 @@
 
   :foobar.mock/queue {}
   :foobar.mock/data-source {}
+  :duct.server.http/aleph {:port    3000
+                           :handler #ig/ref :foobar.handler/cqrs}
+
   }
  ;; :foobar.db/data-source {:service nil}
  ;; :foobar.db/data-source {:service #ig/ref :duct.datomic/conn}
@@ -58,4 +63,5 @@
  :duct.profile/prod  {}
 
  :duct.module/logging {}
- :duct.module.web/api {}}
+ :duct.module.web/api {}
+  }

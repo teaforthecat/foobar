@@ -32,3 +32,15 @@
                                    :params {:type :graphql
                                             :q {:x 1}}))]
       (is (= (:status response) 200)))))
+
+(deftest sse
+  (testing "a stream of numbers"
+    (let [redis (ig/init-key :duct.queue/redis {:spec {:uri "redis://localhost:6379"}})
+          handler (ig/init-key :foobar.handler/cqrs {:pubsub redis
+                                                     :sse-fn :foobar.handler.cqrs/sse-handler})
+          _ (.publish redis "demo" "hi")
+          response (handler (-> (mock/request :get "/api/events")
+                                (mock/content-type "text/event-stream")))]
+      (.publish redis "demo" "hi")
+      (is (= 'wut response #_(-> response :body)))
+      )))

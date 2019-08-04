@@ -110,7 +110,6 @@
                                               "key.serializer" "org.apache.kafka.common.serialization.StringSerializer",
                                               "value.serializer" "org.apache.kafka.common.serialization.StringSerializer"}})
 
-  (def conf {})
 
   (def conn (ig/init-key :duct.queue/kafka options))
 

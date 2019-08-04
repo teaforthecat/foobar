@@ -6,10 +6,12 @@
                  [duct/core "0.7.0"]
                  [duct/module.logging "0.4.0"]
                  [duct/module.web "0.7.0"]
+                 [duct/server.http.aleph "0.1.2"]
                  [org.apache.kafka/kafka-clients "2.3.0"]
                  [com.datomic/datomic-pro "0.9.5930"]
                  [com.taoensso/carmine "2.19.1"]
-                 [metosin/compojure-api "2.0.0-alpha30"]]
+                 [metosin/compojure-api "2.0.0-alpha30"]
+                 ]
 
   :repositories {"my.datomic.com" {:url "https://my.datomic.com/repo"
                                    :creds :gpg}}

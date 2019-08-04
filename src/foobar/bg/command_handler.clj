@@ -6,7 +6,10 @@
   (fn [msg]
     (let [db (d/db (:conn options))
           queue (:queue options)
-          {{:keys [command args command-id user-id]} :value} msg
+          {topic :topic kkey :key kvalue :value offset :offset} msg
+          ;; TODO: oh boy need to serialize/deserialize
+          {:keys [command args command-id user-id]} (read-string kvalue)
+          _ (println command args command-id user-id)
           zulu (:zulu args)
           tx-data [[:db/add (d/tempid :db.part/user) :foobar.handler.cqrs/zulu zulu]
                    ;tx meta data
@@ -18,6 +21,7 @@
           ;; or maybe a retry queue?
           result @(d/transact (:conn options) tx-data)
           response {:command-id command-id
+                    :offset offset
                     :tx-id (.tx (first (:tx-data result)))
                     :result :success}]
-      (.publish (:pubsub options) user-id response))))
+      (.publish (:pubsub options) (or user-id "demo") response))))
